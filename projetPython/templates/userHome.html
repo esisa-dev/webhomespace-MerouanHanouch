@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Docs</title>
+</head>
+
+<body>
+
+  <div class="panel">
+
+    <ul>
+      <li>
+        <form method="POST" action="/button-click">
+          <input type="hidden" name="button_name" value="Files">
+          <button type="submit" class="btn btn-primary">Files</button>
+        </form>
+      </li>
+      <li>
+        <form method="POST" action="/button-click">
+          <input type="hidden" name="button_name" value="Dirs">
+          <button type="submit" class="btn btn-primary">Dirs</button>
+        </form>
+      </li>
+      <li>
+        <form method="POST" action="/button-click">
+          <input type="hidden" name="button_name" value="Space">
+          <button type="submit" class="btn btn-primary">Space</button>
+        </form>
+      </li>
+    </ul>
+    
+    <p>{{ result }}</p>
+
+  
+    <div class="container">
+      <a href="/download_all">
+        <i class="fa fa-download fa-lg" aria-hidden="true"></i>
+      </a>       
+        <div class="search-box">
+            <input class="search-txt" type="text" name="" placeholder="Type to searsh" id="searchInput">
+            <a class="search-btn" href="#">
+                <i class="fa fa-search" aria-hidden="true" id="searchBtn"></i>
+            </a>  
+        </div>    
+    </div>
+    <p id="fileCountLabel" style="color: black; background: brown;"></p>
+         <table>
+          <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>Modify Time</th>
+                  <th>Size</th>
+              </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr>
+              <td> 
+                <a href=" {{parentPath}}">
+            <span>
+              Back
+            </span>
+        </a>
+        </td>
+        <td></td>
+        <td></td>
+        </tr>
+        {% for f1 in files %}
+        <tr>
+          <td>
+            <a href="{{f1['Flink']}}">
+              <span>
+                <i class="{{f1['Icon']}}" style="margin-right: 0.3em;"></i>{{f1["name"]}}
+              </span>
+            </a>
+          </td>
+          <td>{{f1["mTime"]}}</td>
+          <td>{{f1["size"]}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+  </div>
+
+      <script>
+
+        const searchInput = document.getElementById('searchInput');
+        const tableBody = document.getElementById('tableBody');
+        const searchBtn = document.getElementById('searchBtn');
+
+        // Add click event listener to search icon
+        searchBtn.addEventListener('click', function() {
+            const searchText = searchInput.value.toLowerCase();
+
+            // Loop through all table rows
+            for (let i = 0; i < tableBody.rows.length; i++) {
+                const row = tableBody.rows[i];
+                const nameCell = row.cells[0];
+
+                // Check if file name or extension matches search text
+                if (nameCell.innerText.toLowerCase().includes(searchText) || nameCell.innerText.toLowerCase().endsWith(searchText)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+    } 
+     );
+      </script>
+</body>
+
+</html>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+<style>
+  /*Bare*/
+  body{
+    margin: 0;
+    padding: 0; 
+}
+.panel{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+/*    ul (bare) */
+/*ul{
+
+    display: flex;
+    gap: 72px;
+    padding-left: 1%;
+    padding-bottom: 20px;
+    width: 52%;
+}
+
+ul > li{
+    list-style: none;
+    width: 240px;
+}
+
+ul > li > a{
+    font-size: 22px;
+    font-weight: 730;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: black;
+    padding: 10px;
+    transition: 0.5s ease;
+}
+
+ul:hover li a {
+    color: #30edf4;
+}
+
+ul:hover li a:not(:hover) {
+    color: black;
+    opacity: 1;
+    filter: blur(1px);
+}*/
+
+
+
+
+ul li {
+        display: inline-block;
+        margin-right: 10px;
+        font-size: 18px;
+    }
+    ul li form button {
+        background-color: lightgray;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+
+
+/*//////////////////////////*/
+/* Search Bar*/
+
+.container{
+    display: flex;
+    padding-bottom: 100px;
+}
+.container > a > i{
+   
+    padding-top: 20px;
+    width: 50px;
+    height: 50px;
+    padding-left: 530px;
+}
+
+.container > i:hover{
+  color: #30edf4;
+}
+.search-box{
+     position: absolute;
+     height: 35px;
+     border-radius: 30px;
+     padding: 10px;
+     background: lightgray;
+     left: 25%;
+} 
+
+.search-box:hover > .search-txt{
+    padding: 0 20px;
+}
+
+.search-btn{
+    color: black;
+    float: right;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    background: lightgray;
+    justify-content: center;
+    align-items: center;
+    
+}
+.search-txt{
+    border: none;
+    background: none;
+    outline: none;
+    float: left;
+    padding: 0;
+    color: black;
+    font-size: 16px;
+    transition: 0.4s;
+    line-height: 40px;
+    padding-left: 5px;
+    width: 240px;
+}
+
+
+
+
+  /* table*/
+  table {
+    border-collapse: collapse;
+    width: 50%;
+    padding-left: 1%;
+  }
+
+  thead {
+    background-color: #f2f2f2;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 11px;
+  }
+
+  th {
+    font-weight: bold;
+  }
+
+  tr:hover {
+    background-color: #ddd;
+  }
+</style>
